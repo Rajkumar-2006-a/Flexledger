@@ -32,7 +32,7 @@ slef.save() will trigger the on_update so calling self.save() inside it will cau
 ## E2 --merge=Truue
 Setting merge = True in Frappe combines duplicate incoming records into the existing 
 document rather than rejecting them or throwing a duplicate key error.
-##E3 — One Performance Judgment Call
+## E3 — One Performance Judgment Call
 frappe.db.get_value("Studio Settings", None, "default_cancellation_window_hours")
 Because instead of loading the entire doc in the memory ,we can fecth the exact value using the frappe.db.get_value.
 Calling frappe.get_doc repeatedly inside a loop compounds object instantiation and memory thrashing per iteration.
