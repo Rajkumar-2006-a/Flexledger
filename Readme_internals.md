@@ -26,8 +26,8 @@ It will automatically chnages.This happens because Frappe maintains Link-field r
 frappe.get_all is dangerous in a whitelisted method because a user with low permission can access the whitelisted method and use get_all.
 The frappe.get_all ignore all permission and fetches the data,so it will create data breaches.
 
-## E1-- Complete Lifecycle
- maximum recursion depth exceeded
+## E1-- the recursion pitfall
+ Error Name:maximum recursion depth exceeded
 slef.save() will trigger the on_update so calling self.save() inside it will cause a recursive calls.
 ## E2 --merge=Truue
 Setting merge = True in Frappe combines duplicate incoming records into the existing 
