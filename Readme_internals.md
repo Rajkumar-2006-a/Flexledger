@@ -59,6 +59,11 @@ F-string puts the user’s input directly inside the SQL query, so the input can
 Parameterized queries send the input separately, so the database treats it only as a value, not as a command.
 This prevents malicious input from changing or adding SQL commands to the query.
 Therefore, always use parameterized queries to protect the database from SQL injection.
+## J---Print Format
+Calling frappe.get_all() directly in Jinja performs the database query while the Print Format is being rendered.
+This mixes database logic with presentation logic, making the template harder to maintain.
+Using before_print() pre-computes the required data in Python and stores it temporarily in doc.precomputed_field.
+The Jinja template then only displays doc.precomputed_field, keeping the Print Format cleaner and simpler.
 
 ## k2 -N+1
 ``
