@@ -48,6 +48,7 @@ query = f"""
 frappe.db.sql(query)
 
 Parameterized version
+
 SELECT name, member, credits_remaining, expiry_date, status
 FROM `tabPackage Purchase`
 WHERE status = "Active" AND credits_remaining <= %(threshold)s
@@ -59,7 +60,7 @@ Parameterized queries send the input separately, so the database treats it only 
 This prevents malicious input from changing or adding SQL commands to the query.
 Therefore, always use parameterized queries to protect the database from SQL injection.
 
-##k2 -N+1
+## k2 -N+1
 sessions = frappe.get_all("Class Session", fields=["name", "trainer"])
 trainers = frappe.get_all(
     "Trainer",
