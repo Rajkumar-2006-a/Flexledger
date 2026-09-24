@@ -47,12 +47,12 @@ query = f"""
 """
 frappe.db.sql(query)
 
-`Parameterized version`
+Parameterized version
 SELECT name, member, credits_remaining, expiry_date, status
 FROM `tabPackage Purchase`
 WHERE status = "Active" AND credits_remaining <= %(threshold)s
 
-`Safer Version`
+Safer Version
 
 F-string puts the user’s input directly inside the SQL query, so the input can be treated as SQL code.
 Parameterized queries send the input separately, so the database treats it only as a value, not as a command.
