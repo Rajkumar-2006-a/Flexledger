@@ -26,13 +26,13 @@ It will automatically chnages.This happens because Frappe maintains Link-field r
 frappe.get_all is dangerous in a whitelisted method because a user with low permission can access the whitelisted method and use get_all.
 The frappe.get_all ignore all permission and fetches the data,so it will create data breaches.
 
-## E1-- Complete Lifecycle
- maximum recursion depth exceeded
+## E1-- the recursion pitfall
+ Error Name:maximum recursion depth exceeded
 slef.save() will trigger the on_update so calling self.save() inside it will cause a recursive calls.
 ## E2 --merge=Truue
 Setting merge = True in Frappe combines duplicate incoming records into the existing 
 document rather than rejecting them or throwing a duplicate key error.
-##E3 — One Performance Judgment Call
+## E3 — One Performance Judgment Call
 frappe.db.get_value("Studio Settings", None, "default_cancellation_window_hours")
 Because instead of loading the entire doc in the memory ,we can fecth the exact value using the frappe.db.get_value.
 Calling frappe.get_doc repeatedly inside a loop compounds object instantiation and memory thrashing per iteration.
@@ -47,19 +47,20 @@ query = f"""
 """
 frappe.db.sql(query)
 
-`Parameterized version`
+Parameterized version
+
 SELECT name, member, credits_remaining, expiry_date, status
 FROM `tabPackage Purchase`
 WHERE status = "Active" AND credits_remaining <= %(threshold)s
 
-`Safer Version`
+Safer Version
 
 F-string puts the user’s input directly inside the SQL query, so the input can be treated as SQL code.
 Parameterized queries send the input separately, so the database treats it only as a value, not as a command.
 This prevents malicious input from changing or adding SQL commands to the query.
 Therefore, always use parameterized queries to protect the database from SQL injection.
 
-##k2 -N+1
+## k2 -N+1
 sessions = frappe.get_all("Class Session", fields=["name", "trainer"])
 trainers = frappe.get_all(
     "Trainer",
