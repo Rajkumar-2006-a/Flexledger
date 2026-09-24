@@ -1,9 +1,15 @@
-# Copyright (c) 2026, raj and contributors
-# For license information, please see license.txt
-
-# import frappe
+import frappe
 from frappe.model.document import Document
+from frappe.model.naming import make_autoname
 
 
 class PackagePurchase(Document):
-	pass
+    def validate(self):
+        self.credits_remaining = self.total_credits - self.credits_used
+
+    def autoname(self):
+        member_code = self.member.split("-")[-1]
+
+        self.name = make_autoname(
+            f"MEM{member_code}-PKG-.###"
+        )

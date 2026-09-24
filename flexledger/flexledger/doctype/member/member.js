@@ -1,8 +1,7 @@
-// Copyright (c) 2026, raj and contributors
-// For license information, please see license.txt
+frappe.ui.form.on("Member", {
+    refresh(frm) {
+        let is_manager = frappe.user.has_role("FIT Studio Manager");
 
-// frappe.ui.form.on("MEMBER", {
-// 	refresh(frm) {
-
-// 	},
-// });
+        frm.toggle_display("phone", is_manager);
+    }
+});
