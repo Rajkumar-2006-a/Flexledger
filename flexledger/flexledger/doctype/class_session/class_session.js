@@ -42,22 +42,33 @@ frappe.ui.form.on("Class Session", {
             })
         }
         if (frm.doc.status !== "Cancelled" && frm.doc.docstatus === 1) {
-            frm.add_custom_button("Cancel Session", function() {
-                let d = new frappe.ui.Dialog({
-                    title: "Cancel Class Session",
-                    fields: [{
-                            fieldname: "reason",
-                            label: "Cancellation Reason",
-                            fieldtype: "Small Text",
-                            reqd: 1
-                        }],
-                   primary_action_label: "Confirm Cancellation",
-                primary_action(values) {
-                frm.doc.cancellation_reason = values.reason;
-                frm.cancel();
-                d.hide();}
-                });
-                d.show();
+frm.add_custom_button("Cancel Session", function () {
+        let d = new frappe.ui.Dialog({
+            title: "Cancel Class Session",
+            fields: [{
+                fieldname: "reason",
+                label: "Cancellation Reason",
+                fieldtype: "Small Text",
+                reqd: 1
+            }],
+            primary_action_label: "Confirm Cancellation",
+            primary_action(values) {
+                frappe.db
+                    .set_value(frm.doctype, frm.docname, "cancellation_reason", values.reason)
+                    .then(() => {
+                        frappe.call({
+                            method: "frappe.client.cancel",
+                            args: { doctype: frm.doctype, name: frm.docname },
+                            freeze: true,
+                            callback: () => {
+                                d.hide();
+                                frm.reload_doc();
+                            }
+                        });
+                    });
+            }
+            });
+           d.show();
             });
             frm.add_custom_button("Swap Trainer", function() {
                 frappe.prompt(
@@ -75,7 +86,7 @@ frappe.ui.form.on("Class Session", {
                         frappe.call({
                         method: "frappe.client.set_value",
                         args: {
-                             doctype: "Class Session",
+                            doctype: "Class Session",
                             name: frm.doc.name,
                             fieldname: "trainer",
                             value: values.new_trainer

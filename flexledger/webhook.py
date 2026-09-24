@@ -6,11 +6,7 @@ def send_webhook(session_name):
     if not settings.webhook_url:
         return
     doc = frappe.get_doc("Class Session", session_name)
-    payload = {
-        "event": "session_completed",
-        "session": doc.name,
-        "attendees": len(doc.attendees)
-    }
+    payload = {"event": "session_completed","session": doc.name,"attendees": len(doc.attendees)}
     try:
         r = requests.post(settings.webhook_url, json=payload, timeout=5)
         r.raise_for_status()

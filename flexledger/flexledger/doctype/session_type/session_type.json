@@ -19,6 +19,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Session Type Name",
+   "options": "SESSION TYPE",
    "placeholder": " e.g. \"1:1 Personal Training\", \"Group HIIT\"",
    "reqd": 1,
    "unique": 1
@@ -46,7 +47,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-23 12:12:12.612030",
+ "modified": "2026-09-24 18:33:49.127403",
  "modified_by": "Administrator",
  "module": "Flexledger",
  "name": "SESSION TYPE",

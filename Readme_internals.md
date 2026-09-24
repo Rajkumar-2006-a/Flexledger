@@ -61,17 +61,13 @@ This prevents malicious input from changing or adding SQL commands to the query.
 Therefore, always use parameterized queries to protect the database from SQL injection.
 
 ## k2 -N+1
+``
 sessions = frappe.get_all("Class Session", fields=["name", "trainer"])
-trainers = frappe.get_all(
-    "Trainer",
-    filters={"name": ["in", [s.trainer for s in sessions]]},
-    fields=["name", "phone"]
-)
+trainers = frappe.get_all( "Trainer",filters={"name": ["in", [s.trainer for s in sessions]]},fields=["name", "phone"] )
 trainer_map = {t.name: t.phone for t in trainers}
-
 for s in sessions:
     print(s.trainer, trainer_map.get(s.trainer))
-
+``
 ## L1--CRUD with curl
  curl -X GET "http://127.0.0.1:8005/api/resource/MEMBER/MEM-2026-0001"   -H "Authorization: token 4304189c1986e0d:8463211bc802145"
 {"data":{"name":"MEM-2026-0001","owner":"Administrator","creation":"2026-09-22 16:11:28.806409",

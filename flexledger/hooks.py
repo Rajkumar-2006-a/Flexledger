@@ -14,18 +14,20 @@ doc_events = {
         "on_update": "flexledger.audit.log_change",
         "on_submit": "flexledger.audit.log_change",
         "on_cancel": "flexledger.audit.log_change",
+    },
+    "Package Purchase":{
+        "before_print":"flexledger.api.before_print"
     }
 }
 fixtures = [
     {
         "dt": "Role",
-        "filters": [
-            ["name", "in", ["FIT Front Desk", "FIT Trainer", "FIT Studio Manager"]]
-        ]
+        "filters": [["name", "in", ["FIT Front Desk", "FIT Trainer", "FIT Studio Manager"]]]
     }
 ]
 scheduler_events = {
-    "daily": [
-        "flexledger.api.check_expiring_packages"
-    ]
+    "daily": ["flexledger.api.check_expiring_packages"]
+}
+jinja={
+    "methods":["flexledger.utils.get_studio_name"]
 }

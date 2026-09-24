@@ -53,15 +53,11 @@ def send_low_balance_email(member, remaining):
         subject="Low Balance Alert",
         message=f"""
             <p>Hi {member_doc.member_name},</p>
-
             <p>Your account balance is running low.</p>
-
             <p>
                 <b>Remaining Balance:</b> {remaining}
             </p>
-
             <p>Please recharge your account to continue using the service.</p>
-
             <p>Thank you,<br>
             FlexLedger Team</p>
         """
@@ -82,39 +78,24 @@ def after_install():
         ]
     for i in details:
         frappe.get_doc({'doctype': 'SESSION TYPE','session_type_name':i["session_type_name"],'credits_required':i["credits_required"]}).insert()
-    frappe.get_doc({'doctype': 'STUDIO SETTINGS','manager_email':'rajkumar445912@gmail.com'})
+    frappe.get_doc({'doctype': 'STUDIO SETTINGS','manager_email':'rajkumar445912@gmail.com'}).insert()
     frappe.msgprint("Sucessfuly executed after install")
     
 
-
 def check_expiring_packages():
-    last = frappe.db.exists("Audit Log", {
-        "action": "check_expiring_packages",
-        "date": today()
-    })
+    last = frappe.db.exists("Audit Log", {"action": "check_expiring_packages","date": today()})
     if last:
         return 
-    docs = frappe.get_all(
-        "Package Purchase",
-        filters={"status": "Active"},
-        fields=["name", "member", "expiry_date"]
-    )
+    docs = frappe.get_all("Package Purchase",filters={"status": "Active"},fields=["name", "member", "expiry_date"])
     for i in docs:
         days = date_diff(i.expiry_date, today())
         if 0 <= days<= 7:
             frappe.logger("flexledger").info(
                 f"Package {i.name} for member {i.member} expires in {days} day(s)"
             )
-    frappe.get_doc({
-        "doctype": "Audit Log",
-        "doctype_name": "Package Purchase",
-        "document_name": "scheduler",
-        "action": "check_expiring_packages",
-        "user": "Administrator",
-        "date": today()
-    })
+    frappe.get_doc({"doctype": "Audit Log","doctype_name": "Package Purchase","document_name": "scheduler",
+        "action": "check_expiring_packages","user": "Administrator","date": today()}).insert()
     
-
 @frappe.whitelist()
 def get_member_balance():
     member_id = frappe.form_dict.get("member_id")
@@ -135,3 +116,6 @@ def get_member_balance():
         "credits_remaining": doc.credits_remaining,
         "expiry_date": doc.expiry_date
     }
+
+def before_print(doc, method=None, print_settings=None):
+    doc.print_summary = f"{doc.member} - {doc.total_credits} credits"
