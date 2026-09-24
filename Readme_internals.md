@@ -19,7 +19,8 @@ Every document has a modified timestamp when a user open a record ,the timestamp
 On save frappe checks the loaded modified value against the timestamp in the database.
 If someone else saved in between that .Frappe throws error.
 
-
+## C3 — Attendee Entry & Package Purchase
+It will automatically chnages.This happens because Frappe maintains Link-field references when a document is renamed. The linked Package Purchase records store the Member document's name, so when that name changes, Frappe updates the references to the new name.
 
 ## D2 — Row-Level Filtering & Data 
 frappe.get_all is dangerous in a whitelisted method because a user with low permission can access the whitelisted method and use get_all.
