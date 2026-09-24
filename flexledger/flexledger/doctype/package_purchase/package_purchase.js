@@ -1,8 +1,15 @@
-// Copyright (c) 2026, raj and contributors
-// For license information, please see license.txt
 
-// frappe.ui.form.on("Package Purchase", {
-// 	refresh(frm) {
+frappe.ui.form.on("Package Purchase", {
+	total_credits(frm)
+    {
+        frm.set_value("credits_used",0)
 
-// 	},
-// });
+    },
+    refresh(frm)
+    {
+        if (frm.doc.expirey_date < frappe.datetime.get_today())
+        {
+            frm.set_value("status","Expired")
+        }
+    }
+});

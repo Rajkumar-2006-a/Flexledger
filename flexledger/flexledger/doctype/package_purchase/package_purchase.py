@@ -13,3 +13,4 @@ class PackagePurchase(Document):
         self.name = make_autoname(
             f"MEM{member_code}-PKG-.###"
         )
+    

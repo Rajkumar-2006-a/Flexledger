@@ -19,47 +19,43 @@ class ClassSession(Document):
             i.credits_charged=credits
             if doc.credits_remaining<credits:
                 frappe.throw(f"Memebr {i.member} has insufficient credits . Remaining credits{doc.credits_remaining}")
+                
+                
     def before_submit(self):
         if self.status!="Completed":
             frappe.throw("Need status as Completed ")
         for i in self.attendees:
             if i.attendance_status == "Booked":
                 frappe.throw("Every member attendance should be marked")
+                
+                
     def on_submit(self):
         studio=frappe.get_single("STUDIO SETTINGS")
         for i in self.attendees:
             flag=i.attendance_status == "Attended" or (studio.no_show_forfeits_credit and i.attendance_status == "No-show")
             if not flag:
                 continue
+            
             doc=frappe.get_doc("Package Purchase",i.package_purchase)
             new_used=doc.credits_used+i.credits_charged
             new_rem=doc.total_credits-new_used
-            frappe.db.set_value("Package Purchase",i.package_purchase,{
-                'credits_used':new_used,
-                'credits_remaining':new_rem,
+            
+            frappe.db.set_value("Package Purchase",i.package_purchase,{'credits_used':new_used,'credits_remaining':new_rem,
                 'status':("Fully Used" if new_rem<=0 else doc.status )
             },update_modified=True)
             
+            doc=frappe.get_doc("Package Purchase",i.package_purchase)
             if doc.credits_remaining<studio.low_balance_alert_threshold:
-                frappe.enqueue(
-                    "flexledger.flexledger.api.send_low_balance_email",
-                    member=doc.member,
-                    remaining=new_rem,
-                    now=False
-                )
-        frappe.enqueue(
-        "flexledger.webhook.send_webhook",
-        session_name=self.name,
-        queue="short"
-        )
+                frappe.msgprint("Low credits Mail sent")
+                print("Executed the mail")
+                frappe.enqueue("flexledger.api.send_low_balance_email",member=doc.member,remaining=new_rem,now=True)    
+        frappe.enqueue("flexledger.webhook.send_webhook",session_name=self.name,queue="short")
+         
     def on_cancel(self):
         self.db_set("status", "Cancelled")
         for i in self.attendees:
             should_restore = i.attendance_status == "Attended" or (
-                i.attendance_status == "No-Show"
-                and frappe.get_single(
-                    "Studio Settings"
-                ).no_show_forfeits_credit
+                i.attendance_status == "No-Show"and frappe.get_single("Studio Settings").no_show_forfeits_credit
             )
             if not should_restore:
                 continue
@@ -73,11 +69,7 @@ class ClassSession(Document):
                 "Package Purchase",
                 doc.name,
                 {"credits_used": new_used,"credits_remaining": new_remaining,
-                    "status": (
-                        "Active"
-                        if doc.status == "Fully Used"
-                        else doc.status
-                    ),
+                    "status": ("Active" if doc.status == "Fully Used" else doc.status),
                 },
                 update_modified=True
             )

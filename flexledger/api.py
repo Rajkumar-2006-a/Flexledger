@@ -46,7 +46,7 @@ def share_class_session(session_name, user_email):
     
     
 def send_low_balance_email(member, remaining):
-    member_doc = frappe.get_doc("Member", member)
+    member_doc = frappe.get_doc("MEMBER", member)
 
     frappe.sendmail(
         recipients=member_doc.email,
@@ -82,7 +82,7 @@ def after_install():
         ]
     for i in details:
         frappe.get_doc({'doctype': 'SESSION TYPE','session_type_name':i["session_type_name"],'credits_required':i["credits_required"]}).insert()
-    frappe.get_doc({'doctype': 'STUDIO SETTINGS','manager_email':'rajkumar445912@gmail.com'}).insert()
+    frappe.get_doc({'doctype': 'STUDIO SETTINGS','manager_email':'rajkumar445912@gmail.com'})
     frappe.msgprint("Sucessfuly executed after install")
     
 
@@ -114,7 +114,6 @@ def check_expiring_packages():
         "date": today()
     })
     
-import frappe
 
 @frappe.whitelist()
 def get_member_balance():

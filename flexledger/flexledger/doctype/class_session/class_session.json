@@ -111,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-24 10:29:37.192350",
+ "modified": "2026-09-24 11:25:00.024104",
  "modified_by": "Administrator",
  "module": "Flexledger",
  "name": "Class Session",
@@ -173,22 +173,5 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [
-  {
-   "color": "Orange",
-   "title": "Draft"
-  },
-  {
-   "color": "Gray",
-   "title": "Scheduled"
-  },
-  {
-   "color": "Green",
-   "title": "Completed"
-  },
-  {
-   "color": "Red",
-   "title": "Cancelled"
-  }
- ]
+ "states": []
 }
