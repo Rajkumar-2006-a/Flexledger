@@ -51,7 +51,7 @@ class TestEvent(FrappeTestCase):
     def test_package_purchase(self):
         doc = frappe.get_doc("Package Purchase",frappe.db.get_value("Package Purchase", {"amount_paid": 600}),)
         print(f"Total Credits {doc.total_credits}")
-        print(f"Credits reamining {doc.credits_remaining}")
+        print(f"Credits remaining {doc.credits_remaining}")
         self.assertEqual(doc.total_credits, 60)
     
     def test_class_session(self):

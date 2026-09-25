@@ -55,14 +55,10 @@ class ClassSession(Document):
         self.db_set("status", "Cancelled")
         for i in self.attendees:
             should_restore = i.attendance_status == "Attended" or (
-                i.attendance_status == "No-Show"and frappe.get_single("Studio Settings").no_show_forfeits_credit
-            )
+                i.attendance_status == "No-Show"and frappe.get_single("Studio Settings").no_show_forfeits_credit)
             if not should_restore:
                 continue
-            doc = frappe.get_doc(
-                "Package Purchase",
-                i.package_purchase
-            )
+            doc = frappe.get_doc("Package Purchase",i.package_purchase)
             new_used = doc.credits_used - i.credits_charged
             new_remaining = doc.total_credits - new_used  
             frappe.db.set_value(
