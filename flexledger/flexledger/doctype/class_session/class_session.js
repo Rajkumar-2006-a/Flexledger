@@ -23,7 +23,7 @@ frappe.ui.form.on("Class Session", {
         })
     },
     refresh(frm) {
-     if (frm.doc.status === "Active") {
+    if (frm.doc.status === "Active") {
             frm.dashboard.add_indicator("Active", "green");
         }
         else if (frm.doc.status === "Pending") {
@@ -92,7 +92,7 @@ frm.add_custom_button("Cancel Session", function () {
                             value: values.new_trainer
                             },
                             callback: function() {
-                             frm.set_value("trainer", values.new_trainer);
+                            frm.set_value("trainer", values.new_trainer);
                             frm.trigger("trainer");
                             frappe.msgprint("Trainer swapped successfully.");
                                     }
