@@ -20,16 +20,16 @@ On save frappe checks the loaded modified value against the timestamp in the dat
 If someone else saved in between that .Frappe throws error.
 
 ## C3 — Attendee Entry & Package Purchase
-It will automatically chnages.This happens because Frappe maintains Link-field references when a document is renamed. The linked Package Purchase records store the Member document's name, so when that name changes, Frappe updates the references to the new name.
+It will automatically changes.This happens because Frappe maintains Link-field references when a document is renamed. The linked Package Purchase records store the Member document's name, so when that name changes, Frappe updates the references to the new name.
 
 ## D2 — Row-Level Filtering & Data 
 frappe.get_all is dangerous in a whitelisted method because a user with low permission can access the whitelisted method and use get_all.
 The frappe.get_all ignore all permission and fetches the data,so it will create data breaches.
 
 ## E1-- the recursion pitfall
- Error Name:maximum recursion depth exceeded
+Error Name:maximum recursion depth exceeded
 slef.save() will trigger the on_update so calling self.save() inside it will cause a recursive calls.
-## E2 --merge=Truue
+## E2 --merge=True
 Setting merge = True in Frappe combines duplicate incoming records into the existing 
 document rather than rejecting them or throwing a duplicate key error.
 ## E3 — One Performance Judgment Call
@@ -59,20 +59,8 @@ F-string puts the user’s input directly inside the SQL query, so the input can
 Parameterized queries send the input separately, so the database treats it only as a value, not as a command.
 This prevents malicious input from changing or adding SQL commands to the query.
 Therefore, always use parameterized queries to protect the database from SQL injection.
-## J---Print Format
-Calling frappe.get_all() directly in Jinja performs the database query while the Print Format is being rendered.
-This mixes database logic with presentation logic, making the template harder to maintain.
-Using before_print() pre-computes the required data in Python and stores it temporarily in doc.precomputed_field.
-The Jinja template then only displays doc.precomputed_field, keeping the Print Format cleaner and simpler.
 
-## k2 -N+1
-``
-sessions = frappe.get_all("Class Session", fields=["name", "trainer"])
-trainers = frappe.get_all( "Trainer",filters={"name": ["in", [s.trainer for s in sessions]]},fields=["name", "phone"] )
-trainer_map = {t.name: t.phone for t in trainers}
-for s in sessions:
-    print(s.trainer, trainer_map.get(s.trainer))
-``
+
 ## L1--CRUD with curl
  curl -X GET "http://127.0.0.1:8005/api/resource/MEMBER/MEM-2026-0001"   -H "Authorization: token 4304189c1986e0d:8463211bc802145"
 {"data":{"name":"MEM-2026-0001","owner":"Administrator","creation":"2026-09-22 16:11:28.806409",
@@ -80,10 +68,3 @@ for s in sessions:
 "idx":3,"member_name":"RAJ Kumar","phone":"6380532229","email":"rajkumar445912@gmail.com",
 "join_date":"2026-09-22","status":"Active","user":"rajkumar445912@gmail.com","doctype":"MEMBER"}}
 
-## N1
-JavaScript executes entirely in the browser, which is fully under the end user's control. 
-Hiding the phone field with frm.toggle_display() only changes what gets rendered on screen 
-it has no effect on what the server sends over the wire. I proved this by hiding phone for 
-non-Manager roles in the client script, then calling frappe.client.get_value("Member", "MEM-2026-0001", "phone")
- directly from the browser console while logged in as a non-Manager user — the phone number was 
-returned anyway, because the server-side permission layer never restricted that field.

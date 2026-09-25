@@ -14,11 +14,9 @@ doc_events = {
         "on_update": "flexledger.audit.log_change",
         "on_submit": "flexledger.audit.log_change",
         "on_cancel": "flexledger.audit.log_change",
-    },
-    "Package Purchase":{
-        "before_print":"flexledger.api.before_print"
     }
 }
+
 fixtures = [
     {
         "dt": "Role",

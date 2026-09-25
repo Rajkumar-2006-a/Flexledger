@@ -35,15 +35,6 @@ def transfer_package(package_name,new_member):
         frappe.log_error(title="Package tranfer Failed",message=f"Failed to transfer {package_name} to {new_member}",)
         raise
     
-@frappe.whitelist()
-def share_class_session(session_name, user_email):
-    frappe.share.add(
-        doctype="Class Session",
-        name=session_name,
-        user=user_email,
-        read=1
-    )  
-    
     
 def send_low_balance_email(member, remaining):
     member_doc = frappe.get_doc("MEMBER", member)
@@ -86,7 +77,7 @@ def check_expiring_packages():
     last = frappe.db.exists("Audit Log", {"action": "check_expiring_packages","date": today()})
     if last:
         return 
-    docs = frappe.get_all("Package Purchase",filters={"status": "Active"},fields=["name", "member", "expiry_date"])
+    docs = frappe.get_all("Package Purchase",filters={"status": "Active"},fields=["name", "member", "expirey_date"])
     for i in docs:
         days = date_diff(i.expiry_date, today())
         if 0 <= days<= 7:
@@ -106,8 +97,7 @@ def get_member_balance():
         "Package Purchase",
         {"member": member_id, "status": "Active"},
         ["credits_remaining", "expirey_date"],
-        as_dict=True
-    )
+        as_dict=True)
     if not doc:
         frappe.local.response["http_status_code"] = 404
         return {"error": "Not found"}
@@ -117,5 +107,3 @@ def get_member_balance():
         "expiry_date": doc.expiry_date
     }
 
-def before_print(doc, method=None, print_settings=None):
-    doc.print_summary = f"{doc.member} - {doc.total_credits} credits"
