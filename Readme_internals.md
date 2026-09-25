@@ -68,3 +68,6 @@ Therefore, always use parameterized queries to protect the database from SQL inj
 "idx":3,"member_name":"RAJ Kumar","phone":"6380532229","email":"rajkumar445912@gmail.com",
 "join_date":"2026-09-22","status":"Active","user":"rajkumar445912@gmail.com","doctype":"MEMBER"}}
 
+## Test
+1.bench use <sitename>
+2.bench run-tests --app flexledger
